@@ -1,0 +1,2 @@
+# Scricher
+Twitter-like app
