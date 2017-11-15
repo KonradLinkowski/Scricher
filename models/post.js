@@ -24,3 +24,5 @@ post.getAllByUser = function(userID, done) {
         done(null, rows);
     });
 }
+
+module.exports = post;
