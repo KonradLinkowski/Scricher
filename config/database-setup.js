@@ -23,10 +23,11 @@ database.connect = function(mode, done) {
             : database.mode.TEST
     });
     state.mode = database.mode;
+    
 }
 
 database.get = function() {
-    state.pool;
+    return state.pool;
 }
 
 database.fixtures = function(data) {
