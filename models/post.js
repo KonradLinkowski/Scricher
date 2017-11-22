@@ -1,28 +1,13 @@
-const db = require('../setup/database-setup.js');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const post = {};
+const PostSchema = new Schema({
+    _id: Schema.Types.ObjectId,
+    user_id: { type: Schema.Types.ObjectId, ref: 'user'},
+    message: String,
+    date: Date
+});
 
-post.create = function(userID, text, done) {
-    let values = [userID, text, new Date().toISOString()];
+const Post = mongoose.model('post', PostSchema);
 
-    db.get().query('INSERT INTO posts(user_id, text, date) VALUES(??, ??, ??)', values, (err, result) => {
-        if (err) return done(err);
-        done(null, result.insertID);
-    });
-}
-
-post.getAll = function(done) {
-    db.get().query('SELECT * FROM posts', (err, rows) => {
-        if (err) return done(err);
-        done(null, rows);
-    });
-}
-
-post.getAllByUser = function(userID, done) {
-    db.get().query('SELECT * FROM posts WHERE user_id = ??', userID, (err, rows) => {
-        if (err) return done(err);
-        done(null, rows);
-    });
-}
-
-module.exports = post;
+module.exports = Post;
