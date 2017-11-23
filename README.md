@@ -5,7 +5,7 @@ Node/express social media service.
 * express
 * async
 * bcryptjs
-* mysql
+* mongoose
 * jasmine
 * passport
 * passport-jwt
