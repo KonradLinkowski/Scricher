@@ -9,10 +9,15 @@ passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
     secretOrKey: keys.jwt.jwtKey
     }, (jwt_payload, done) => {
-        user.getUser(jwt_payload.id, (err, user) => {
-            if (err) return done(err, false);
-            if (user) done(null, user);
-            else done(null, false);
+        User.findOne({id: jwt_payload.sub}, function(err, user) {
+            if (err) {
+                return done(err, false);
+            }
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
         });
     })
 );

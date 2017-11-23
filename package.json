@@ -8,6 +8,7 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.16.2",
     "jasmine": "^2.8.0",
+    "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.13.4",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1"
