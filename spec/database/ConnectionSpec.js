@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const keys = require('../../config/keys');
+const User = require('../../models/user');
+const Post = require('../../models/post');
 
 mongoose.Promise = global.Promise;
 process.on('unhandledRejection', err => console.log(err.stack));
@@ -13,21 +15,8 @@ beforeAll(() => {
         console.log("Connection error: ", err);
         expect(err).not.toBeDefined();
     });
-});
-/*
-//drop collections before each test
-beforeEach(() => {
+
+    Post.remove({}, () => {});
     
-    if(mongoose.connection.collections.users != undefined) {
-        mongoose.connection.collections.users.drop(() => {
-            done();
-        });
-    }
-    if(mongoose.connection.collection.posts != undefined) {
-        mongoose.connection.collection.posts.drop(() => {
-            done();
-        });
-    }
-    
+    User.remove({}, () => {});
 });
-*/
