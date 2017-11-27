@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
 router.post('/signup', (req, res) => {
-    if (!req.body.username || !req.body.password) {
+    console.log(req.body);
+    console.log(typeof req.body !== undefined, !req.body.password, !req.body.email);
+    if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         res.json({success: false, msg: 'Please pass username and password.'});
     } else {
         const newUser = new User({
@@ -39,7 +41,8 @@ router.post('/signin', function(req, res) {
             user.comparePassword(req.body.password, function (err, isMatch) {
                 if (isMatch && !err) {
                     // if user is found and password is right create a token
-                    var token = jwt.sign(user, keys.jwt.jwtKey);
+                    console.log(user);
+                    var token = jwt.sign(user.toJSON(), keys.jwt.jwtKey);
                     // return the information including token as JSON
                     res.json({success: true, token: token});
                 } else {
