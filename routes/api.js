@@ -81,7 +81,7 @@ router.get('/posts', passport.authenticate('jwt', { session: false }), (req, res
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.find().populate('user').exec(function (err, posts) {
+    Post.find().populate('user', 'first_name last_name').exec(function (err, posts) {
         if (err) return next(err);
         res.json(posts);
     });
@@ -94,6 +94,16 @@ router.get ('/posts/:id', passport.authenticate('jwt', { session: false }), (req
     Post.findOne({_id: req.params.id}).populate('user', '-_id first_name last_name').exec(function (err, post) {
         if (err) return next(err);
         res.json(post);
+    });
+});
+
+router.get ('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    if (!getToken(req.headers)) {
+        return res.status(403).send({success: false, msg: "Unauthorized."});
+    }
+    User.findOne({_id: req.params.id}).populate('posts').exec(function(err, user) {
+        if (err) return res.json({success: false, msg: 'Something wrong happened.'});
+        res.json(user);
     });
 });
 
