@@ -5,31 +5,36 @@ const Post = require('../../models/post');
 // Describe our tests
 describe('Saving records', function(){
 
-    var myEmail = "jankowalski@mail.com";
+    const creationDate = new Date();
+    const myUser = new User({
+        _id: mongoose.Types.ObjectId(),
+        first_name: "Jacek",
+        last_name: "Trąba",
+        password: "TrudneHaslo",
+        email: "jankowalski@mail.com",
+        creation: creationDate,
+        last_login: null
+    });
 
     // Create tests
     it('saves a user to the database', function(done){
-
-        let date = new Date();
-        const user = new User({
-            first_name: "Jacek",
-            last_name: "Trąba",
-            password: "TrudneHaslo",
-            email: myEmail,
-            creation: date,
-            last_login: null
-        });
-
+        const user = new User(myUser);
         user.save((err) => {
             if (err) throw (err);
         }).then(function(){
             expect(user.isNew).toBeFalsy();
+            expect(user._id).toBe(myUser._id);
+            expect(user.first_name).toBe(myUser.first_name);
+            expect(user.last_name).toBe(myUser.last_name);
+            expect(user.password).not.toBe(myUser.password);
+            expect(user.email).toBe(myUser.email);
+            expect(user.creation).toBe(myUser.creation);
             done();
         });
     }, 6000);
 
     it("updates user's last login date", () => {
-        User.update({email: myEmail}, {last_login: new Date()}, (err, raw) => {
+        User.update({email: myUser.email}, {last_login: new Date()}, (err, raw) => {
             if (err) console.log(err);
             expect(err).toBeNull();
             expect(raw).not.toBeNull();
@@ -37,31 +42,39 @@ describe('Saving records', function(){
     }, 6000);
 
     it("updates user's last login date correctly", () => {
-        var date = new Date();
-        User.findOneAndUpdate({email: myEmail}, {last_login: date}, (err, doc) => {
+        const loginDate = new Date();
+        User.findOneAndUpdate({email: myUser.email}, {last_login: loginDate}, (err, doc) => {
             if (err) console.log(err);
             expect(err).toBeNull();
-            expect(doc.last_login.toString()).toEqual(date.toString());
+            expect(doc.creation.toString()).toEqual(creationDate.toString());
+            expect(doc.last_login.toString()).toEqual(loginDate.toString());
         });
     }, 6000);
 
-    var post;
+    let myPost = {
+        user: myUser._id,
+        message: "Cos tam cos tam",
+        date: new Date()
+    };
     it('saves a post to a database', function(done) {
-        post = new Post({
-            user_email: myEmail,
-            message: "Cos tam cos tam",
-            date: new Date()
-        });
+        post = new Post(myPost);
         post.save((err) => {
             if (err) console.log(err);
         }).then(() => {
             expect(post.isNew).toBeFalsy();
+            expect(post.user).toBe(myUser._id);
+            expect(post.message).toBe(myPost.message);
+            expect(post.date).toBe(myPost.date);
             done();
         });
     }, 6000);
    
     it('adds a comment to the post and saves it to the database', () => {
-        post.comments.push({user_email: myEmail, message: "Test test test test.", date: new Date()});
+        let myComment = {
+            user: myUser._id,
+            message: "Test test test test.",
+            date: new Date()};
+        post.comments.push(myComment);
         post.save((err) => {
             if (err) console.log(err);
             Post.findById(post._id, (err, res) => {

@@ -8,8 +8,8 @@ const UserSchema = new Schema({
     last_name: String,
     email: {type: String, index: {unique: true}},
     password: {type: String, required: true},
-    creation: {type: Date, default: Date.now},
-    last_login: {type: Date, default: null}
+    creation: {type: Date},
+    last_login: {type: Date}
 });
 
 UserSchema.virtual('posts', {

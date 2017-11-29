@@ -81,7 +81,7 @@ router.get('/posts', passport.authenticate('jwt', { session: false }), (req, res
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.find().populate('user', '-_id first_name last_name').exec(function (err, posts) {
+    Post.find().populate('user').exec(function (err, posts) {
         if (err) return next(err);
         res.json(posts);
     });
