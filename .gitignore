@@ -3,3 +3,6 @@ node_modules
 
 #ignore sensitive date
 config/keys.js
+
+#ignore IDEs and editors files
+/.idea

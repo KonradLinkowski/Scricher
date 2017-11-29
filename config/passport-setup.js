@@ -3,7 +3,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const passport = require('passport');
 
 const User = require('../models/user');
-const keys = require('./keys')
+const keys = require('./keys');
 
 passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
@@ -19,5 +19,4 @@ passport.use(new JwtStrategy({
                 return done(null, false);
             }
         });
-    })
-);
+    }));
