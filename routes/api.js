@@ -5,6 +5,7 @@ const Post = require('../models/post');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
+// register new account
 router.post('/signup', (req, res) => {
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         res.json({success: false, msg: 'Please pass email and password.'});
@@ -14,8 +15,7 @@ router.post('/signup', (req, res) => {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
-        password: req.body.password,
-        creation: new Date()
+        password: req.body.password
     });
     // save the user
     newUser.save(function(err) {
@@ -26,6 +26,7 @@ router.post('/signup', (req, res) => {
     });
 });
 
+// log in to an account
 router.post('/signin', function(req, res) {
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         res.json({success: false, msg: 'Please pass email and password.'});
@@ -56,6 +57,7 @@ router.post('/signin', function(req, res) {
     });
 });
 
+// create new post
 router.post('/post', passport.authenticate('jwt', {session: false}), (req, res) => {
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized"});
@@ -64,12 +66,13 @@ router.post('/post', passport.authenticate('jwt', {session: false}), (req, res) 
         return res.status(403).send({success: false, msg: "Pass email and message"});
     }
     const post = new Post({
-        user_email: req.user.email,
+        user: req.user._id,
         message: req.body.message,
         date: new Date()
     });
     post.save((err) => {
         if (err) {
+            console.log(err);
             return res.json({success: false, msg: 'Save post failed.'});
         }
         res.json({success: true, msg: 'Succesfuly created a new post.'});
@@ -77,26 +80,40 @@ router.post('/post', passport.authenticate('jwt', {session: false}), (req, res) 
     });
 });
 
+//get all posts
 router.get('/posts', passport.authenticate('jwt', { session: false }), (req, res) => {
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.find(function (err, posts) {
+    Post.find().populate('user', 'first_name, last_name').exec(function (err, posts) {
         if (err) return next(err);
         res.json(posts);
     });
 });
 
+//get posts by id
 router.get ('/posts/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.find({_id: req.params.id}, function (err, post) {
+    Post.findOne({_id: req.params.id}).populate('user', '-_id first_name last_name').exec(function (err, post) {
         if (err) return next(err);
         res.json(post);
     });
 });
 
+//get all users posts
+router.get ('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    if (!getToken(req.headers)) {
+        return res.status(403).send({success: false, msg: "Unauthorized."});
+    }
+    User.findOne({_id: req.params.id}).populate('posts').exec(function(err, user) {
+        if (err) return res.json({success: false, msg: 'Something wrong happened.'});
+        res.json(user);
+    });
+});
+
+// get token out of header
 function getToken (headers) {
     if (!headers || !headers.authorization) {
         return null;

@@ -11,6 +11,8 @@ const UserSchema = new Schema({
     password: {type: String, required: true},
     creation: {type: Date, default: Date.now()},
     last_login: {type: Date}
+},{
+    toJSON: { virtuals: true },
 });
 
 UserSchema.virtual('posts', {
