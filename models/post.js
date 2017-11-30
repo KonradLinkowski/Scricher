@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
-const CommentSchema = new Schema({
-    user_email: { type: String, ref: 'user'},
-    message: String,
-    date: Date
-});
+const CommentSchema = require('./comment');
 
 const PostSchema = new Schema({
-    user_email: { type: String, ref: 'user'},
-    message: String,
-    date: Date,
+    user_email: {type:  mongoose.Schema.Types.ObjectId, ref: 'user'},
+    message: {type: String, required: true},
+    date: {type: Date, default: Date.now},
     comments: [CommentSchema]
 });
 

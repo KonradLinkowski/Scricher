@@ -7,14 +7,20 @@ const SALT_WORK_FACTOR = 10;
 const UserSchema = new Schema({
     first_name: String,
     last_name: String,
-    email: String,
-    password: String,
-    creation: Date,
-    last_login: Date
+    email: {type: String, index: {unique: true}},
+    password: {type: String, required: true},
+    creation: {type: Date, default: Date.now},
+    last_login: {type: Date}
+});
+
+UserSchema.virtual('posts', {
+    ref: 'post',
+    localField: '_id',
+    foreignField: 'user'
 });
 
 UserSchema.pre('save', function(next) {
-    var user = this;
+    const user = this;
 
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
