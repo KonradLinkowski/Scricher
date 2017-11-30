@@ -6,7 +6,7 @@ const api = require('./routes/api');
 const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const app = express();
 

@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     creation: {type: Date, default: Date.now()},
     last_login: {type: Date}
 },{
+    id: false,
     toJSON: { virtuals: true },
 });
 
