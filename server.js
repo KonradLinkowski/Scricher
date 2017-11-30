@@ -6,7 +6,7 @@ const api = require('./routes/api');
 const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const app = express();
 
@@ -24,10 +24,14 @@ app.use(passport.initialize());
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongo.test_key, (err) => {
     if (err) console.log(err);
-    else console.log("\x1b[32mConnected to database");
+    else console.log("Connected to database");
 });
 
-app.use('/api', api);
+app.use('/api', require('./routes/api'))
+/*app.use('/api', require('./routes/auth'));
+app.use('/api', require('./routes/users'));
+app.use('/api', require('./routes/posts'));
+app.use('/api', require('./routes/comments'));*/
 
 app.get('/', (req, res) => {
     res.end("Aby połączyć się z api, użyj /api.")
