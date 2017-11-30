@@ -5,9 +5,9 @@ const keys = require('../config/keys');
 
 // register new account
 router.post('/signup', (req, res) => {
+    // check if email and password have been passed
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
-        res.json({success: false, msg: 'Please pass email and password.'});
-        return;
+        return res.json({success: false, msg: 'Please pass email and password.'});
     }
     const newUser = new User({
         first_name: req.body.first_name,
@@ -26,9 +26,12 @@ router.post('/signup', (req, res) => {
 
 // log in to an account
 router.post('/signin', function(req, res) {
+    // check if email and password have been passed
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         return res.json({success: false, msg: 'Please pass email and password.'});
     }
+
+    // find user's email in the database
     User.findOne({
         email: req.body.email
     }, function(err, user) {

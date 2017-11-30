@@ -32,7 +32,7 @@ UserSchema.pre('save', function(next) {
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if (err) return next(err);
 
-        // hash the password using our new salt
+        // hash the password using new salt
         bcrypt.hash(user.password, salt, function(err, hash) {
             if (err) return next(err);
 

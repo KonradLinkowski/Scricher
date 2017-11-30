@@ -4,10 +4,13 @@ const Comment = require('../models/comment');
 const Post = require('../models/post');
 const Util = require('./util');
 
+// get posts's comments
 router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // retrieve token from headers
     if (!Util.getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
+    // retrieve query parameterrs
     let query = Util.getQuery(req.query);
     Post.find({'date': {$gte: query.oldest.toISOString(), $lte: query.newest.toISOString()}}).skip(query.skip).limit(query.limit)
         .populate('user', '-comments -last_login -password -posts')
@@ -16,12 +19,14 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
         if (err) console.error (err);
         res.json(posts);
     });
+    // find post
     Post.findOne({_id: req.params.id}).populate('posts').exec(function(err, user) {
         if (err) return res.json({success: false, msg: 'Something wrong happened.'});
         res.json(user);
     });
 });
 
+// create new comment
 router.post('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
     if (!Util.getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized"});

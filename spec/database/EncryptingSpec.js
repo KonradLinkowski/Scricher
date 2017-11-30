@@ -5,7 +5,7 @@ const User = require('../../models/user');
 describe('UserSchema.pre()', function(){
 
     var myPassword = "trudne haslo";
-    it('hashes users password', function(done) {
+    it("hashes user's password", function(done) {
         const user = new User({
             first_name: "Jan",
             last_name: "Kowalski",
