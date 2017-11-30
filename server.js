@@ -24,7 +24,7 @@ app.use(passport.initialize());
 mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongo.test_key, (err) => {
     if (err) console.log(err);
-    else console.log("Connected to database");
+    else console.log("\x1b[32mConnected to database");
 });
 
 app.use('/api', api);

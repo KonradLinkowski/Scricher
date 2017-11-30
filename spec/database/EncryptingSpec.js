@@ -9,9 +9,8 @@ describe('UserSchema.pre()', function(){
         const user = new User({
             first_name: "Jan",
             last_name: "Kowalski",
-            email: "email@gmail.com",
+            email: "email@example.com",
             password: myPassword,
-            creation: new Date()
         });
         user.save(function(err) {
             if (err) console.log(err);

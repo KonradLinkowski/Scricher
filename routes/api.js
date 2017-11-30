@@ -82,11 +82,19 @@ router.post('/post', passport.authenticate('jwt', {session: false}), (req, res) 
 
 //get all posts
 router.get('/posts', passport.authenticate('jwt', { session: false }), (req, res) => {
+    let query = {
+        oldest: req.query.oldest === undefined ? new Date('2015-12-12T17:00:00Z') : new Date(req.query.oldest),
+        newest: req.query.newest === undefined ? new Date() : new Date(req.query.newest),
+        limit: req.query.limit === undefined ? 10 : parseInt(req.query.limit),
+        skip: req.query.skip === undefined ? 0 : parseInt(req.query.skip)
+    }
+    console.log(query.skip);
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.find().populate('user', 'first_name, last_name').exec(function (err, posts) {
-        if (err) return next(err);
+    Post.find({'date': {$gte: query.oldest.toISOString(), $lte: query.newest.toISOString()}}).skip(query.skip).limit(query.limit)
+        .populate('user', '-comments -last_login -password -posts').exec(function (err, posts) {
+        if (err) console.log (err);
         res.json(posts);
     });
 });
@@ -96,8 +104,9 @@ router.get ('/posts/:id', passport.authenticate('jwt', { session: false }), (req
     if (!getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
-    Post.findOne({_id: req.params.id}).populate('user', '-_id first_name last_name').exec(function (err, post) {
+    Post.findOne({_id: req.params.id}).populate('user', '-_id first_name last_name comments').exec(function (err, post) {
         if (err) return next(err);
+
         res.json(post);
     });
 });
