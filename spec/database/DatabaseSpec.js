@@ -5,31 +5,36 @@ const Post = require('../../models/post');
 // Describe our tests
 describe('Saving records', function(){
 
-    var myEmail = "jankowalski@mail.com";
+    const myUser = new User({
+        first_name: "Jan",
+        last_name: "Kowalski",
+        password: "TrudneHaslo.pass",
+        email: "jankowalski@example.com",
+        creation: Date.now(),
+        last_login: null
+    });
 
     // Create tests
     it('saves a user to the database', function(done){
 
-        let date = new Date();
-        const user = new User({
-            first_name: "Jacek",
-            last_name: "Trąba",
-            password: "TrudneHaslo",
-            email: myEmail,
-            creation: date,
-            last_login: null
-        });
-
-        user.save((err) => {
+        myUser.save((err) => {
             if (err) throw (err);
         }).then(function(){
-            expect(user.isNew).toBeFalsy();
-            done();
+            expect(myUser.isNew).toBeFalsy();
+            User.findOne({email: myUser.email}, (err, user) => {
+                if (err) throw err;
+                expect(user.first_name).toBe(myUser.first_name);
+                expect(user.last_name).toBe(myUser.last_name);
+                expect(user.password).toBe(myUser.password);
+                expect(user.email).toBe(myUser.email);
+                expect(user.creation.toString()).toEqual(myUser.creation.toString());
+                done();
+            });
         });
     }, 6000);
 
     it("updates user's last login date", () => {
-        User.update({email: myEmail}, {last_login: new Date()}, (err, raw) => {
+        User.update({email: myUser.email}, {last_login: Date.now()}, (err, raw) => {
             if (err) console.log(err);
             expect(err).toBeNull();
             expect(raw).not.toBeNull();
@@ -38,7 +43,7 @@ describe('Saving records', function(){
 
     it("updates user's last login date correctly", () => {
         var date = new Date();
-        User.findOneAndUpdate({email: myEmail}, {last_login: date}, (err, doc) => {
+        User.findOneAndUpdate({email: myUser.email}, {last_login: date}, (err, doc) => {
             if (err) console.log(err);
             expect(err).toBeNull();
             expect(doc.last_login.toString()).toEqual(date.toString());
@@ -48,7 +53,7 @@ describe('Saving records', function(){
     var post;
     it('saves a post to a database', function(done) {
         post = new Post({
-            user_email: myEmail,
+            user: myUser._id,
             message: "Cos tam cos tam",
             date: new Date()
         });
@@ -61,7 +66,7 @@ describe('Saving records', function(){
     }, 6000);
    
     it('adds a comment to the post and saves it to the database', () => {
-        post.comments.push({user_email: myEmail, message: "Test test test test.", date: new Date()});
+        post.comments.push({user: myUser._id, message: "Test test test test.", date: new Date()});
         post.save((err) => {
             if (err) console.log(err);
             Post.findById(post._id, (err, res) => {

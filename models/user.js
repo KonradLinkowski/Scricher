@@ -9,7 +9,7 @@ const UserSchema = new Schema({
     last_name: String,
     email: {type: String, index: {unique: true}},
     password: {type: String, required: true},
-    creation: {type: Date, default: Date.now},
+    creation: {type: Date, default: Date.now()},
     last_login: {type: Date}
 });
 
