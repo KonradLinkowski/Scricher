@@ -32,13 +32,28 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
     let query = Util.getQuery(req.query);
-    Post.find({'date': {$gte: query.oldest.toISOString(), $lte: query.newest.toISOString()}},
-        '-comments -__v')
-        .skip(query.skip).limit(query.limit)
-        .populate('user', '-__v -last_login -password')
+    Post.aggregate([
+            {
+                '$match': {
+                    'date': {$gte: query.oldest.toISOString(), $lte: query.newest.toISOString()}
+                }
+            },
+            {
+                '$project': {
+                    numberOfComments: {$size: '$comments'},
+                }
+            },
+            { '$skip': query.skip },
+            { '$limit': query.skip + query.limit }
+        ])
         .exec(function (err, posts) {
-        if (err) console.error (err);
-        res.json(posts);
+            if (err) console.error (err);
+            Post.populate(posts, {
+                path: 'user', select: '-__v -last_login -password'
+            }, (err, posts) => {
+                if (err) console.error (err);
+                res.json(posts);
+            });
     });
 });
 
