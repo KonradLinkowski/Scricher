@@ -2,12 +2,16 @@ const router = require('express').Router();
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
+const validator = require('validator');
 
 // register new account
 router.post('/signup', (req, res) => {
     // check if email and password have been passed
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         return res.json({success: false, msg: 'Please pass email and password.'});
+    }
+    if (!validator.isEmail(req.body.email)) {
+        return res.json({success: false, msg: 'Please pass correct email.'});
     }
     const newUser = new User({
         first_name: req.body.first_name,
@@ -18,7 +22,7 @@ router.post('/signup', (req, res) => {
     // save the user
     newUser.save(function(err) {
         if (err) {
-            return res.json({success: false, msg: 'Username already exists.'});
+            return res.json({success: false, msg: 'Email already exists.'});
         }
         res.json({success: true, msg: 'Successful created new user.'});
     });
@@ -30,7 +34,9 @@ router.post('/signin', function(req, res) {
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
         return res.json({success: false, msg: 'Please pass email and password.'});
     }
-
+    if (!validator.isEmail(req.body.email)) {
+        return res.json({success: false, msg: 'Please pass correct email.'});
+    }
     // find user's email in the database
     User.findOne({
         email: req.body.email
