@@ -1,8 +1,8 @@
 Util = {};
 Util.getQuery = function (query) {
     return {
-        oldest: query.oldest === undefined ? new Date('2015-12-12T17:00:00Z') : new Date(req.query.oldest),
-        newest: query.newest === undefined ? new Date() : new Date(req.query.newest),
+        oldest: query.oldest === undefined ? new Date('2015-12-12T17:00:00Z') : typeof query.oldest == 'string' ? new Date(query.oldest) : query.oldest,
+        newest: query.newest === undefined ? new Date() : typeof query.newest == 'string' ? new Date(query.newest) : query.newest,
         limit: query.limit === undefined ? 10 : parseInt(query.limit),
         skip: query.skip === undefined ? 0 : parseInt(query.skip)
     }

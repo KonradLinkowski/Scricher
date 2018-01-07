@@ -32,12 +32,15 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         return res.status(403).send({success: false, msg: "Unauthorized."});
     }
     let query = Util.getQuery(req.query);
-    Post.find({'date': {$gte: query.oldest.toISOString(), $lte: query.newest.toISOString()}},
-        '-comments -__v')
-        .skip(query.skip).limit(query.limit)
-        .populate('user', '-__v -last_login -password')
-        .exec(function (err, posts) {
-        if (err) console.error (err);
+    if(query.newest == "Invalid Date" || query.oldest == "Invalid Date") {
+        return res.status(400).send({success: false, msg: "Invalid date."});
+    }
+    Post.find({'date': {$gte: query.oldest.toISOString(), $lt: query.newest.toISOString()}}, '-comments -__v')
+    .skip(query.skip).limit(query.skip + query.limit)
+    .populate('user', '-__v -last_login -password -posts')
+    .sort('-date')
+    .exec(function (err, posts) {
+        if (err) console.error(err);
         res.json(posts);
     });
 });
