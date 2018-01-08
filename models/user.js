@@ -22,6 +22,12 @@ UserSchema.virtual('posts', {
     foreignField: 'user'
 });
 
+UserSchema.virtual('comments', {
+    ref: 'comment',
+    localField: '_id',
+    foreignField: 'user'
+});
+
 UserSchema.pre('save', function(next) {
     const user = this;
 
