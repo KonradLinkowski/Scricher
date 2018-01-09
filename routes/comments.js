@@ -14,15 +14,16 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     let query = Util.getQuery(req.query);
 
     // find comments
-    Comment.find({'post': req.params.id})
+    Comment.find({'post': req.params.id}, '-post, -__v')
     .where('date').gte(query.oldest.toISOString()).lt(query.newest.toISOString())
     .skip(query.skip)
     .limit(query.skip + query.limit)
-    .exec(function(err, comment) {
+    .populate('user')
+    .sort('-date')
+    .exec(function(err, comments) {
+        console.log(error)
         if (err) return res.json({success: false, msg: err});
-
-        console.log(comment)
-        res.json(comment);
+        res.json(comments);
     });
 });
 
