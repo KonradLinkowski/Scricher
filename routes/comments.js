@@ -21,7 +21,7 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     .populate('user')
     .sort('-date')
     .exec(function(err, comments) {
-        console.log(error)
+        console.log(err)
         if (err) return res.json({success: false, msg: err});
         res.json(comments);
     });
@@ -46,30 +46,16 @@ router.post('/:id', passport.authenticate('jwt', {session: false}), (req, res) =
             console.log(err)
             return res.json({success: false, msg: 'Save comment failed.'})
         }
-        res.json({success: true, msg: 'Succesfuly created a new comment.'});
-    })
-    /*
-    Post.findById(req.params.id).exec(function(err, post){
-        
-        if (err) {
-            console.error(err);
-            return res.status(404).send({success: false, msg: "There isn't such post."});
-        }
-        const comment = {
-            user: req.user._id,
-            message: req.body.message,
-            date: new Date()
-        };
-        post.comments.push(comment);
-        post.save((err) => {
+        Comment.findById(newComment._id)
+        .populate('user')
+        .exec(function(err, comment) {
             if (err) {
-                console.error(err);
-                return res.json({success: false, msg: 'Saving post failed.'});
+                console.log(err)
+                return res.json({success: false, msg: 'Save comment failed.'})
             }
-            return res.status(201).send({success: true, msg: "Comment created."});
-        });
-    });
-    */
+            res.json(comment);
+        })
+    })
 });
 
 module.exports = router;
