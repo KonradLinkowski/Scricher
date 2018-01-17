@@ -20,4 +20,9 @@ Util.getToken = function (headers) {
     return parted[1];
 };
 
+Util.userRoles = {
+    USER: 0,
+    ADMIN: 3,
+}
+
 module.exports = Util;

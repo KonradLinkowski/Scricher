@@ -10,7 +10,8 @@ const UserSchema = new Schema({
     email: {type: String, index: {unique: true}},
     password: {type: String, required: true},
     creation: {type: Date, default: Date.now()},
-    last_login: {type: Date}
+    last_login: {type: Date},
+    role: {type: Number, default: 0}
 },{
     id: false,
     toJSON: { virtuals: true },
