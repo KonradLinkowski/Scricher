@@ -68,4 +68,17 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     });
 });
 
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    if (!Util.getToken(req.headers)) {
+        return res.status(403).send({success: false, msg: "Unauthorized"});
+    }
+    Post.findByIdAndRemove(req.params.id, function(err) {
+        if (err) {
+            console.log(err)
+            return res.status(403).send({success: false, msg: err});
+        }
+        return res.send({success: true, msg: "Post removed."})
+    })
+})
+
 module.exports = router;
