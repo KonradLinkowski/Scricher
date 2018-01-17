@@ -16,14 +16,14 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     // find comments
     Comment.find({'post': req.params.id}, '-post, -__v')
     .where('date').gte(query.oldest.toISOString()).lt(query.newest.toISOString())
+    .sort('-date')
     .skip(query.skip)
     .limit(query.skip + query.limit)
     .populate('user')
-    .sort('-date')
     .exec(function(err, comments) {
         console.log(err)
         if (err) return res.json({success: false, msg: err});
-        res.json(comments);
+        res.json(comments.reverse());
     });
 });
 
