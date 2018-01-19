@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../../models/user');
 const Post = require('../../models/post');
+const Comment = require('../../models/comment')
 
 // Describe our tests
 describe('Saving records', function(){
@@ -64,14 +65,19 @@ describe('Saving records', function(){
             done();
         });
     }, 6000);
-   
+    var comment;
     it('adds a comment to the post and saves it to the database', () => {
-        post.comments.push({user: myUser._id, message: "Test test test test.", date: new Date()});
-        post.save((err) => {
-            if (err) console.log(err);
-            Post.findById(post._id, (err, res) => {
-                expect(res.comments.length).not.toEqual(0);
-            });
-        });
+        comment = new Comment({
+            user: myUser._id,
+            post: post._id,
+            message: "Test test test test.",
+        })
+        comment.save()
+        .then(() => {
+            expect(comment.isNew).toBeFalsy();
+        })
+        .catch(err => {
+            console.error(err)
+        })
     }, 6000);
 });
