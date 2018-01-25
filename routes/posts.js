@@ -2,6 +2,7 @@ const router = require('express').Router();
 const passport = require('passport');
 const Post = require('../models/post');
 const Util = require('./util');
+const Comment = require('../models/comment');
 
 // create new post
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -9,7 +10,10 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
         return res.status(403).send({success: false, msg: "Unauthorized"});
     }
     if (!req.body) {
-        return res.status(403).send({success: false, msg: "Pass email and message"});
+        return res.status(403).send({success: false, msg: "Pass message"});
+    }
+    if (!req.body.message) {
+        return res.status(403).send({success: false, msg: "Pass message"});
     }
     const post = new Post({
         user: req.user._id,
@@ -18,7 +22,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     });
     post.save((err) => {
         if (err) {
-            console.log(err);
+            console.error(err);
             return res.json({success: false, msg: 'Save post failed.'});
         }
         Post.findById(post._id, '-comments -__v')
@@ -72,12 +76,18 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     if (!Util.getToken(req.headers)) {
         return res.status(403).send({success: false, msg: "Unauthorized"});
     }
-    Post.findByIdAndRemove(req.params.id, function(err) {
+    Comment.remove({ post: req.params.id }, function(err) {
         if (err) {
-            console.log(err)
+            console.error(err)
             return res.status(403).send({success: false, msg: err});
         }
-        return res.send({success: true, msg: "Post removed."})
+        Post.findByIdAndRemove(req.params.id, function(err) {
+            if (err) {
+                console.error(err)
+                return res.status(403).send({success: false, msg: err});
+            }
+            return res.send({success: true, msg: "Post removed."})
+        })
     })
 })
 

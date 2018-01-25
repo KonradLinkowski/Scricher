@@ -11,8 +11,7 @@ describe('Saving records', function(){
         last_name: "Kowalski",
         password: "TrudneHaslo.pass",
         email: "jankowalski@example.com",
-        creation: Date.now(),
-        last_login: null
+        role: 3
     });
 
     // Create tests
@@ -36,7 +35,7 @@ describe('Saving records', function(){
 
     it("updates user's last login date", () => {
         User.update({email: myUser.email}, {last_login: Date.now()}, (err, raw) => {
-            if (err) console.log(err);
+            if (err) console.error(err);
             expect(err).toBeNull();
             expect(raw).not.toBeNull();
         });
@@ -45,7 +44,7 @@ describe('Saving records', function(){
     it("updates user's last login date correctly", () => {
         var date = new Date();
         User.findOneAndUpdate({email: myUser.email}, {last_login: date}, (err, doc) => {
-            if (err) console.log(err);
+            if (err) console.error(err);
             expect(err).toBeNull();
             expect(doc.last_login.toString()).toEqual(date.toString());
         });
@@ -59,7 +58,7 @@ describe('Saving records', function(){
             date: new Date()
         });
         post.save((err) => {
-            if (err) console.log(err);
+            if (err) console.error(err);
         }).then(() => {
             expect(post.isNew).toBeFalsy();
             done();

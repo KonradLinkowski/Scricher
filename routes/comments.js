@@ -21,7 +21,7 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     .limit(query.skip + query.limit)
     .populate('user')
     .exec(function(err, comments) {
-        console.log(err)
+        console.error(err)
         if (err) return res.json({success: false, msg: err});
         res.json(comments.reverse());
     });
@@ -43,14 +43,14 @@ router.post('/:id', passport.authenticate('jwt', {session: false}), (req, res) =
     })
     newComment.save(err => {
         if (err) {
-            console.log(err)
+            console.error(err)
             return res.json({success: false, msg: 'Save comment failed.'})
         }
         Comment.findById(newComment._id)
         .populate('user')
         .exec(function(err, comment) {
             if (err) {
-                console.log(err)
+                console.error(err)
                 return res.json({success: false, msg: 'Save comment failed.'})
             }
             res.json(comment);
@@ -64,7 +64,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     }
     Comment.findByIdAndRemove(req.params.id, function(err) {
         if (err) {
-            console.log(err)
+            console.error(err)
             return res.status(403).send({success: false, msg: err});
         }
         return res.send({success: true, msg: "Comment removed."})

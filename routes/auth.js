@@ -8,11 +8,9 @@ const validator = require('validator');
 router.post('/signup', (req, res) => {
     // check if email and password have been passed
     if ((typeof req.body !== undefined && !req.body) || !req.body.password || !req.body.email) {
-        console.log("email and password")
         return res.status(400).json({success: false, msg: 'Please pass email and password.'});
     }
     if (!validator.isEmail(req.body.email)) {
-        console.log("bad mail")
         return res.status(400).json({success: false, msg: 'Please pass correct email.'});
     }
     const newUser = new User({
@@ -24,7 +22,6 @@ router.post('/signup', (req, res) => {
     // save the user
     newUser.save(function(err) {
         if (err) {
-            console.log("email exists")
             return res.status(400).json({success: false, msg: 'Email already exists.'});
         }
         res.json({success: true, msg: 'Successful created new user.'});

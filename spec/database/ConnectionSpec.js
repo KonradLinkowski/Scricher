@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const keys = require('../../config/keys');
 const User = require('../../models/user');
 const Post = require('../../models/post');
+const Comment = require('../../models/comment')
 
 mongoose.Promise = global.Promise;
 process.on('unhandledRejection', err => console.log(err.stack));
@@ -15,6 +16,8 @@ beforeAll(() => {
         console.log("Connection error: ", err);
         expect(err).not.toBeDefined();
     });
+
+    Comment.remove({}, () => {})
 
     Post.remove({}, () => {});
     

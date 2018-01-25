@@ -13,7 +13,7 @@ describe('UserSchema.pre()', function(){
             password: myPassword,
         });
         user.save(function(err) {
-            if (err) console.log(err);
+            if (err) console.error(err);
             expect(user.password).not.toEqual(myPassword);
             user.comparePassword(myPassword, function(err, isMatch) {
                 expect(isMatch).toBeTruthy();
