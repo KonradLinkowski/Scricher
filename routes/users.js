@@ -54,11 +54,11 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
     }
     Comment.remove({user: req.params.id})
     .exec(function(err) {
-        console.error(err)
+        if (err) console.error(err)
     })
     Post.remove({user: req.params.id})
     .exec(function(err) {
-        console.error(err)
+        if (err) console.error(err)
     })
     User.findByIdAndRemove(req.params.id)
     .exec(function(err, user) {
