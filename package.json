@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kon1997/Scricher.git"
+    "url": "git+https://github.com/KonradLinkowski/Scricher.git"
   },
   "author": "Konrad Linkowski",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Kon1997/Scricher/issues"
+    "url": "https://github.com/KonradLinkowski/Scricher/issues"
   },
-  "homepage": "https://github.com/Kon1997/Scricher#readme"
+  "homepage": "https://github.com/KonradLinkowski/Scricher#readme"
 }

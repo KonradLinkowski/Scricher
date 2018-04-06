@@ -17,7 +17,7 @@ https://scricher.herokuapp.com/
 Clone repository and run it yourself.
 Remember to add config/keys.js file containing mongodb and jwt string!
 ```bash
-$ git clone https://github.com/Kon1997/Scricher
+$ git clone https://github.com/KonradLinkowski/Scricher
 $ cd Scricher
 $ npm install
 $ npm start
