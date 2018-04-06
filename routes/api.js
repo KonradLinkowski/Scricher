@@ -7,7 +7,7 @@ router.use('/comments', require('./comments'));
 
 // redirect to the github page
 router.get('/', (req, res) => {
-    res.redirect('https://github.com/KonradLinkowski/Scricher');
+  res.redirect('https://github.com/KonradLinkowski/Scricher');
 });
 
 module.exports = router;
