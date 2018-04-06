@@ -9,8 +9,8 @@ describe('Saving records', function(){
     const myUser = new User({
         first_name: "Jan",
         last_name: "Kowalski",
-        password: "TrudneHaslo.pass",
-        email: "jankowalski@example.com",
+        password: "test",
+        email: "test@example.com",
         role: 3
     });
 

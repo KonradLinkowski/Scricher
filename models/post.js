@@ -7,13 +7,6 @@ const PostSchema = new Schema({
     date: {type: Date, default: Date.now()},
     comments: [{type:  mongoose.Schema.Types.ObjectId, ref: 'comment'}]
 });
-/*
-PostSchema.virtual('comments', {
-    ref: 'comment',
-    localField: '_id',
-    foreignField: 'post'
-});
-*/
 
 const Post = mongoose.model('post', PostSchema, 'posts');
 
