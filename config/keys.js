@@ -12,7 +12,8 @@ if (fs.existsSync(filePath)) {
       jwtKey: process.env.JWT_KEY
     },
     mongo: {
-      test_key: process.env.MONGO_TEST_KEY
+      test_key: process.env.MONGO_TEST_KEY,
+      prod_key: process.env.MONGO_PROD_KEY
     }
   }
 }
