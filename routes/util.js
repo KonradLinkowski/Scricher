@@ -1,4 +1,4 @@
-Util = {};
+let Util = {};
 Util.getQuery = function (query) {
   return {
     oldest: query.oldest === undefined ? new Date('2015-12-12T17:00:00Z') : typeof query.oldest == 'string' ? new Date(query.oldest) : query.oldest,
