@@ -27,8 +27,8 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
         }
         Post.findById(post._id, '-comments -__v')
         .populate('user')
-        .exec(function(error, post) {
-            if(error) {
+        .exec(function(err, post) {
+            if(err) {
                 console.log(error);
             return res.json({success: false, msg: 'Save post failed.'});
             }

@@ -21,8 +21,10 @@ router.get ('/:id', passport.authenticate('jwt', { session: false }), (req, res)
     .limit(query.skip + query.limit)
     .populate('user')
     .exec(function(err, comments) {
-        console.error(err)
-        if (err) return res.json({success: false, msg: err});
+        if (err) {
+            console.error(err)
+            return res.json({success: false, msg: err});
+        }
         res.json(comments.reverse());
     });
 });
