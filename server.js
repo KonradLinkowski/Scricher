@@ -26,10 +26,15 @@ app.use(passport.initialize());
 mongoose.Promise = global.Promise;
 
 // connect to the database
-mongoose.connect(keys.mongo.prod_key, (err) => {
-  if (err) console.error(err);
-  else console.log("Connected to database");
-});
+mongoose.connect(keys.mongo.prod_key, {
+  useMongoClient: true,
+})
+.then(result => {
+  console.log("Connected to database");
+})
+.catch(err => {
+  console.error(err);
+})
 
 // make express use api routes
 app.use('/api', require('./routes/api'))
