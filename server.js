@@ -15,6 +15,12 @@ const app = express();
 // allow cors
 app.use(cors());
 
+// set default utf8
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  next()
+})
+
 // parse request body
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
